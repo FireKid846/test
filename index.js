@@ -5,7 +5,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 // Replace with your bot token from @BotFather
 const TELEGRAM_TOKEN = '8339300549:AAGUpYGRBMFFqMZLUl1NQetqIzKWcI4Sr2Y';
-const API_KEY = 'sk_4e64bb7084af9e734255fb9e9007745c5dc52acfe9dfd1a313eabdb1b12da101';
+const API_KEY = 'sk_3f939deecfe5a9f381dea931f51db72de9379f1b2474059bce38bc6ae61ab358';
 const BASE_URL = 'https://gamingsensitivity.vercel.app';
 
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
