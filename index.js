@@ -7,7 +7,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const TELEGRAM_TOKEN = '8339300549:AAGUpYGRBMFFqMZLUl1NQetqIzKWcI4Sr2Y';
 const API_KEY = 'sk_0b8d6441858108bbef2e9f0af1637f89f8cbbb5767d401f7db7e897fda1d568a';
 const BASE_URL = 'https://gamingsensitivity.vercel.app';
-const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'YOUR_RENDER_URL_HERE';
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'https://test-bu52.onrender.com';
 
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
 
