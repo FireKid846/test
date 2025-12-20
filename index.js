@@ -2,32 +2,65 @@
 // Install: npm install node-telegram-bot-api
 
 const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
 
 // Replace with your bot token from @BotFather
 const TELEGRAM_TOKEN = '8339300549:AAGUpYGRBMFFqMZLUl1NQetqIzKWcI4Sr2Y';
-const API_KEY = 'sk_0b8d6441858108bbef2e9f0af1637f89f8cbbb5767d401f7db7e897fda1d568a';
+const API_KEY = 'sk_77cf0a45f40600b4d9454e4069372db217f9b442f6b0ccb6dc64efced45e6616';
 const BASE_URL = 'https://gamingsensitivity.vercel.app';
-const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'https://test-bu52.onrender.com';
+const PORT = process.env.PORT || 3000;
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
+const app = express();
 
 // Store user sessions
 const userSessions = {};
 
-console.log('🤖 Bot started! Send /start to begin');
+// Express server for health checks and self-ping
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'online', 
+    message: '🤖 Telegram Bot is running!',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    bot: 'active',
+    sessions: Object.keys(userSessions).length
+  });
+});
+
+app.get('/ping', (req, res) => {
+  res.json({ 
+    status: 'pong',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Start Express server
+app.listen(PORT, () => {
+  console.log(`🌐 Express server running on port ${PORT}`);
+  console.log(`🤖 Bot started! Send /start to begin`);
+  console.log(`📡 Health check available at: ${RENDER_URL}/health`);
+});
 
 // Self-ping to keep Render service alive
-if (RENDER_URL && RENDER_URL !== 'YOUR_RENDER_URL_HERE') {
-  setInterval(async () => {
-    try {
-      const response = await fetch(RENDER_URL);
-      console.log(`✅ Self-ping successful: ${response.status}`);
-    } catch (error) {
-      console.error('❌ Self-ping failed:', error.message);
-    }
-  }, 14 * 60 * 1000); // Ping every 14 minutes
-  console.log('⏰ Self-ping enabled - pinging every 14 minutes');
-}
+setInterval(async () => {
+  try {
+    const response = await fetch(`${RENDER_URL}/ping`);
+    const data = await response.json();
+    console.log(`✅ Self-ping successful: ${data.status} at ${data.timestamp}`);
+  } catch (error) {
+    console.error('❌ Self-ping failed:', error.message);
+  }
+}, 14 * 60 * 1000); // Ping every 14 minutes
+
+console.log('⏰ Self-ping enabled - pinging every 14 minutes');
 
 // Start command
 bot.onText(/\/start/, (msg) => {
